@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1a1d2e;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    .header, .footer {
+      background-color: #23263a;
+      padding: 10px;
+      text-align: center;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      background-color: #2e3140;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .nav a {
+      color: #ffffff;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s, transform 0.3s;
+      position: relative;
+    }
+    .nav a:hover {
+      background-color: #5567a6;
+      transform: scale(1.1);
+    }
+    .nav a.active {
+      background-color: #40568a;
+      transform: scale(1.1);
+    }
+    .nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%;
+      height: 4px;
+      background-color: #ffffff;
+      border-radius: 2px;
+    }
+    .content {
+      padding: 20px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .swipe-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding: 20px;
+      animation: slideIn 0.5s ease-out;
+    }
+    .swipe-item {
+      background-color: #35405d;
+      padding: 20px;
+      border-radius: 10px;
+      min-width: 200px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .swipe-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .form input, .form textarea {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2e3140;
+      color: #ffffff;
+      transition: background-color 0.3s;
+    }
+    .form input:focus, .form textarea:focus {
+      background-color: #35405d;
+      outline: none;
+    }
+    .form button {
+      background-color: #5567a6;
+      color: #ffffff;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .form button:hover {
+      background-color: #40568a;
+    }
+    #search-input {
+      width: 80%;
+      padding: 10px;
+      margin: 20px auto;
+      border: none;
+      border-radius: 5px;
+      background-color: #2e3140;
+      color: #ffffff;
+      font-size: 16px;
+      text-align: center;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    #search-input:focus {
+      background-color: #35405d;
+      box-shadow: 0 0 10px rgba(85, 103, 166, 0.5);
+      outline: none;
+    }
+    #search-results {
+      margin-top: 20px;
+    }
+    #search-results p {
+      background-color: #35405d;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px auto;
+      width: 80%;
+      transition: background-color 0.3s;
+    }
+    #search-results p:hover {
+      background-color: #5567a6;
+    }
+    .no-results {
+      font-size: 18px;
+      color: #ff6666;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Marketplace</h1>
+  </header>
+  <nav class="nav">
+    <a href="#main" id="main-link" onclick="showPage('main')">Главная</a>
+    <a href="#search" id="search-link" onclick="showPage('search')">Поиск</a>
+    <a href="#profile" id="profile-link" onclick="showPage('profile')">Профиль</a>
+  </nav>
+  <main class="content" id="content">
+    <!-- Main page -->
+    <section id="main" class="page">
+      <h2>Выбирайте товары</h2>
+      <div class="swipe-container" id="items">
+        <!-- JS will insert products here -->
+      </div>
+    </section>
+    <!-- Search page -->
+    <section id="search" class="page" style="display: none;">
+      <h2>Поиск</h2>
+      <input type="text" id="search-input" placeholder="Введите название">
+      <div id="search-results"></div>
+    </section>
+    <!-- Profile page -->
+    <section id="profile" class="page" style="display: none;">
+      <h2>Профиль</h2>
+      <p>Ваш ID: <span id="user-id"></span></p>
+      <h3>История заказов</h3>
+      <div id="order-history">
+        <p>Пока пусто</p>
+      </div>
+      <h3>Для продавцов</h3>
+      <form class="form" id="seller-form">
+        <input type="text" name="number" placeholder="Ваш номер" required>
+        <textarea name="description" placeholder="Описание" required></textarea>
+        <button type="submit">Отправить заявку</button>
+      </form>
+    </section>
+  </main>
+  <footer class="footer">
+    Marketplace © 2024
+  </footer>
+  <script>
+    const products = [
+      { id: 1, name: "Товар 1", description: "Описание товара 1" },
+      { id: 2, name: "Товар 2", description: "Описание товара 2" },
+    ];
+
+    const itemsContainer = document.getElementById("items");
+    products.forEach(product => {
+      const item = document.createElement("div");
+      item.className = "swipe-item";
+      item.innerHTML = `<h3>${product.name}</h3><p>${product.description}</p>`;
+      itemsContainer.appendChild(item);
+    });
+
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase();
+      const results = products.filter(p => p.name.toLowerCase().includes(query));
+      const resultsContainer = document.getElementById("search-results");
+      resultsContainer.innerHTML = results.length 
+        ? results.map(r => `<p>${r.name}</p>`).join("") 
+        : `<p class="no-results">Ничего не найдено</p>`;
+    });
+
+    function showPage(pageId) {
+      document.querySelectorAll(".nav a").forEach(link => link.classList.remove("active"));
+      document.getElementById(`${pageId}-link`).classList.add("active");
+      document.querySelectorAll(".page").forEach(page => {
+        page.style.display = page.id === pageId ? "block" : "none";
+      });
+    }
+
+    const userId = `user_${Math.random().toString(36).substr(2, 9)}`;
+    document.getElementById("user-id").textContent = userId;
+
+    const botToken = '7262467632:AAGv2FmMkHDcQKzYSLbw1VNtdapGi1pAw40';
+    const chatId = '1258306425';
+
+    function sendMessageToTelegram(message) {
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+      const data = { chat_id: chat
